@@ -5,14 +5,14 @@ import Topbar from './components/Topbar';
 
 import Login from './pages/Login';
 import Register from './pages/Register';
-// import AddContact from './AddContact';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
     <Router>
       <Topbar />
       <Switch>
-        {/* <Route exact path="/" component={AddContact} /> */}
+        <Route exact path="/" component={Dashboard} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
       </Switch>

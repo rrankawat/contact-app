@@ -6,7 +6,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -33,15 +32,28 @@ body {
   --success: green;
   --danger: #cf5353;
 }
+.bg-success {
+  background-color: var(--success);
+}
+
+.bg-primary {
+  background-color: var(--primary) !important;
+}
 
 .header .navbar {
   background-color: var(--primary) !important;
+}
+.navbar .container ul li {
+  margin: auto;
+}
+.navbar .container ul li a {
+  font-size: 18px;
 }
 
 .row {
   height: 90vh;
   margin: auto;
-  align-items: center;
+  margin-top: 50px;
 }
 
 .heading-default-primary {
@@ -59,11 +71,14 @@ body {
 }
 
 .contact-list-body {
-  width: 90%;
+  border: none;
 }
 
 .card {
   border-radius: 0;
+}
+
+.card-body {
   background-color: var(--background);
 }
 
@@ -80,15 +95,20 @@ body {
 .btn-edit,
 .btn-delete {
   padding: 5px 15px;
+  border: none;
+  border-radius: 0;
 }
 
 .btn-edit {
   background-color: var(--secondary);
-  border: none;
   margin-right: 20px;
 }
 
 .btn-delete {
   background-color: var(--danger);
-  border: none;
+}
+
+.badge {
+  float: right;
+  border-radius: 0;
 }
