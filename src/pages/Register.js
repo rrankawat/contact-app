@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { isEmail } from '../utils/Validation';
-import { URL } from '../utils/Config';
+import { API_URL } from '../utils/Config';
 
 import Alert from '../components/Alert';
 
@@ -27,37 +27,59 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let flagName = false;
+    let flagEmail = false;
+    let flagPassword = false;
+    let flagConfirmPassword = false;
+
     if (name === '') {
       setNameErr('Enter your name');
+      flagName = true;
     } else {
       setNameErr(null);
+      flagName = false;
     }
 
     if (email === '') {
       setEmailErr('Enter your email');
+      flagEmail = true;
     } else if (!isEmail(email)) {
       setEmailErr('Please enter valid email id');
+      flagEmail = true;
     } else {
       setEmailErr(null);
+      flagEmail = false;
     }
 
     if (password === '') {
       setPasswordErr('Enter password');
+      flagPassword = true;
     } else if (password.length < 6) {
-      setPasswordErr('Password length should exceed 8');
+      setPasswordErr('Password length should exceed 6');
+      flagPassword = true;
     } else {
       setPasswordErr(null);
+      flagPassword = false;
     }
 
     if (confirmPassword === '') {
       setConfirmPasswordErr(`Confirm password can't be blank`);
+      flagConfirmPassword = true;
     } else if (confirmPassword !== password) {
       setConfirmPasswordErr('Invalid or mismatch password');
+      flagConfirmPassword = true;
     } else {
       setConfirmPasswordErr(null);
+      flagConfirmPassword = false;
     }
 
-    if (name !== '' && email !== '' && password !== '') {
+    if (
+      flagName === false &&
+      flagEmail === false &&
+      flagPassword === false &&
+      flagConfirmPassword === false
+    ) {
       const payload = {
         name,
         email,
@@ -65,7 +87,7 @@ const Register = () => {
       };
 
       try {
-        const res = await axios.post(`${URL}/api/v1/users`, payload, {
+        const res = await axios.post(`${API_URL}/api/v1/users`, payload, {
           headers: { 'Content-Type': 'application/json' },
         });
 
