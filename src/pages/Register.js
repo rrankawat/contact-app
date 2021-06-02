@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { isEmail } from '../utils/Validation';
+import validate from '../utils/validate';
 import { API_URL } from '../utils/Config';
 
 import Alert from '../components/Alert';
@@ -14,10 +14,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [nameErr, setNameErr] = useState(null);
-  const [emailErr, setEmailErr] = useState(null);
-  const [passwordErr, setPasswordErr] = useState(null);
-  const [confirmPasswordErr, setConfirmPasswordErr] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const [alert, setAlert] = useState({
     display: false,
@@ -28,58 +25,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let flagName = false;
-    let flagEmail = false;
-    let flagPassword = false;
-    let flagConfirmPassword = false;
+    // Check
+    const resErrors = validate({ name, email, password, confirmPassword });
+    setErrors(resErrors);
 
-    if (name === '') {
-      setNameErr('Enter your name');
-      flagName = true;
-    } else {
-      setNameErr(null);
-      flagName = false;
-    }
-
-    if (email === '') {
-      setEmailErr('Enter your email');
-      flagEmail = true;
-    } else if (!isEmail(email)) {
-      setEmailErr('Please enter valid email id');
-      flagEmail = true;
-    } else {
-      setEmailErr(null);
-      flagEmail = false;
-    }
-
-    if (password === '') {
-      setPasswordErr('Enter password');
-      flagPassword = true;
-    } else if (password.length < 6) {
-      setPasswordErr('Password length should exceed 6');
-      flagPassword = true;
-    } else {
-      setPasswordErr(null);
-      flagPassword = false;
-    }
-
-    if (confirmPassword === '') {
-      setConfirmPasswordErr(`Confirm password can't be blank`);
-      flagConfirmPassword = true;
-    } else if (confirmPassword !== password) {
-      setConfirmPasswordErr('Invalid or mismatch password');
-      flagConfirmPassword = true;
-    } else {
-      setConfirmPasswordErr(null);
-      flagConfirmPassword = false;
-    }
-
-    if (
-      flagName === false &&
-      flagEmail === false &&
-      flagPassword === false &&
-      flagConfirmPassword === false
-    ) {
+    if (resErrors.count === 0) {
       const payload = {
         name,
         email,
@@ -130,81 +80,80 @@ const Register = () => {
   };
 
   return (
-    <div className="container">
-      <div className="row w-100 d-flex justify-content-center main-col ">
-        <div className="form col-12 col-md-8 col-xxl-5 ">
-          {alert.display && <Alert type={alert.type} msg={alert.msg} />}
+    <div className="row d-flex justify-content-center">
+      <div className="form col-md-6">
+        {alert.display && <Alert type={alert.type} msg={alert.msg} />}
 
-          <div className="form-heading mb-4 text-center">
-            <h1>
-              Account <span className="heading-default-primary">Register</span>
-            </h1>
-          </div>
-          <div className="form-section">
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label className="form-label">Name</label>
-                <input
-                  className={`form-control input ${
-                    nameErr !== null ? 'is-invalid' : ''
-                  }`}
-                  value={name}
-                  type="text"
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <div className="invalid-feedback">
-                  {nameErr !== null && nameErr}
-                </div>
-              </div>
+        <div className="form-heading mb-4 text-center">
+          <h1>
+            Account <span className="heading-default-primary">Register</span>
+          </h1>
+        </div>
 
-              <div className="mb-3">
-                <label className="form-label">Email address</label>
-                <input
-                  type="type"
-                  className={`form-control input ${
-                    emailErr !== null ? 'is-invalid' : ''
-                  }`}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <div className="invalid-feedback">
-                  {emailErr !== null && emailErr}
-                </div>
+        <div className="form-section">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <input
+                className={`form-control input ${
+                  errors.name ? 'is-invalid' : ''
+                }`}
+                value={name}
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+              />
+              <div className="invalid-feedback">
+                {errors.name && errors.name}
               </div>
-              <div className="mb-3">
-                <label className="form-label">Password</label>
-                <input
-                  type="password"
-                  className={`form-control input ${
-                    passwordErr !== null ? 'is-invalid' : ''
-                  }`}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <div className="invalid-feedback">
-                  {passwordErr !== null && passwordErr}
-                </div>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Confirm Password</label>
-                <input
-                  type="password"
-                  className={`form-control input ${
-                    confirmPasswordErr !== null ? 'is-invalid' : ''
-                  }`}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <div className="invalid-feedback">
-                  {confirmPasswordErr !== null && confirmPasswordErr}
-                </div>
-              </div>
+            </div>
 
-              <button type="submit" className="submit btn btn-primary">
-                Submit
-              </button>
-            </form>
-          </div>
+            <div className="mb-3">
+              <label className="form-label">Email address</label>
+              <input
+                type="type"
+                className={`form-control input ${
+                  errors.email ? 'is-invalid' : ''
+                }`}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <div className="invalid-feedback">
+                {errors.email && errors.email}
+              </div>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                className={`form-control input ${
+                  errors.password ? 'is-invalid' : ''
+                }`}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <div className="invalid-feedback">
+                {errors.password && errors.password}
+              </div>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Confirm Password</label>
+              <input
+                type="password"
+                className={`form-control input ${
+                  errors.confirmPassword ? 'is-invalid' : ''
+                }`}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <div className="invalid-feedback">
+                {errors.confirmPassword && errors.confirmPassword}
+              </div>
+            </div>
+
+            <button type="submit" className="submit btn btn-primary">
+              Submit
+            </button>
+          </form>
         </div>
       </div>
     </div>

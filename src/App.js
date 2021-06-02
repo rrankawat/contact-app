@@ -11,11 +11,13 @@ const App = () => {
   return (
     <Router>
       <Topbar />
-      <Switch>
-        <Route exact path="/" component={Dashboard} />
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/login" component={Login} />
-      </Switch>
+      <div className="container py-5">
+        <Switch>
+          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
+        </Switch>
+      </div>
     </Router>
   );
 };
