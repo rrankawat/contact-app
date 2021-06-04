@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import validate from '../utils/validate';
@@ -20,12 +20,26 @@ const Login = () => {
     msg: '',
   });
 
+  useEffect(() => {
+    return () => {
+      setEmail('');
+      setPassword('');
+      setAlert({
+        display: false,
+        type: '',
+        msg: '',
+      });
+    };
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Check
     const resErrors = validate({ email, password });
     setErrors(resErrors);
+
+    console.log(resErrors);
 
     // API Call
     if (resErrors.count === 0) {
@@ -51,13 +65,13 @@ const Login = () => {
         history.push('/');
 
         // Reset vars
-        setEmail('');
-        setPassword('');
-        setAlert({
-          display: false,
-          type: '',
-          msg: '',
-        });
+        // setEmail('');
+        // setPassword('');
+        // setAlert({
+        //   display: false,
+        //   type: '',
+        //   msg: '',
+        // });
       } catch (err) {
         if (!err.response.data.success) {
           setAlert({
