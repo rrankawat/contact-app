@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
 import validate from '../utils/validate';
-import { API_URL } from '../utils/Config';
+import { loginUser } from '../redux/auth/authActions';
+import { useDispatch } from 'react-redux';
 
 import Alert from '../components/Alert';
 
 const Login = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,49 +40,55 @@ const Login = () => {
     const resErrors = validate({ email, password });
     setErrors(resErrors);
 
-    console.log(resErrors);
+    // Call to action
+    if (resErrors.count === 0) {
+      dispatch(loginUser({ email, password }));
+
+      // Redirect
+      history.push('/');
+    }
 
     // API Call
-    if (resErrors.count === 0) {
-      const payload = {
-        email,
-        password,
-      };
+    // if (resErrors.count === 0) {
+    //   const payload = {
+    //     email,
+    //     password,
+    //   };
 
-      try {
-        const res = await axios.post(`${API_URL}/api/v1/auth`, payload, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    //   try {
+    //     const res = await axios.post(`${API_URL}/api/v1/auth`, payload, {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //     });
 
-        if (res.data.success) {
-          localStorage.setItem('token', res.data.token);
-        } else {
-          localStorage.removeItem('token');
-        }
+    //     if (res.data.success) {
+    //       localStorage.setItem('token', res.data.token);
+    //     } else {
+    //       localStorage.removeItem('token');
+    //     }
 
-        // Redirect
-        history.push('/');
+    //     // Redirect
+    //     history.push('/');
 
-        // Reset vars
-        // setEmail('');
-        // setPassword('');
-        // setAlert({
-        //   display: false,
-        //   type: '',
-        //   msg: '',
-        // });
-      } catch (err) {
-        if (!err.response.data.success) {
-          setAlert({
-            display: true,
-            type: 'danger',
-            msg: err.response.data.message,
-          });
-        }
-      }
-    }
+    //     // Reset vars
+    //     // setEmail('');
+    //     // setPassword('');
+    //     // setAlert({
+    //     //   display: false,
+    //     //   type: '',
+    //     //   msg: '',
+    //     // });
+    //   } catch (err) {
+    //     if (!err.response.data.success) {
+    //       setAlert({
+    //         display: true,
+    //         type: 'danger',
+    //         msg: err.response.data.message,
+    //       });
+    //     }
+    //   }
+    // }
   };
 
   return (
