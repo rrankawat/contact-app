@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import validate from '../utils/validate';
 import { loginUser } from '../redux/auth/authActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Alert from '../components/Alert';
 
 const Login = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
+
+  const login = useSelector((state) => state.loginUser);
+  const { loading } = login;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,53 +44,12 @@ const Login = () => {
     // Call to action
     if (resErrors.count === 0) {
       dispatch(loginUser({ email, password }));
-
-      // Redirect
-      history.push('/');
     }
-
-    // API Call
-    // if (resErrors.count === 0) {
-    //   const payload = {
-    //     email,
-    //     password,
-    //   };
-
-    //   try {
-    //     const res = await axios.post(`${API_URL}/api/v1/auth`, payload, {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     });
-
-    //     if (res.data.success) {
-    //       localStorage.setItem('token', res.data.token);
-    //     } else {
-    //       localStorage.removeItem('token');
-    //     }
-
-    //     // Redirect
-    //     history.push('/');
-
-    //     // Reset vars
-    //     // setEmail('');
-    //     // setPassword('');
-    //     // setAlert({
-    //     //   display: false,
-    //     //   type: '',
-    //     //   msg: '',
-    //     // });
-    //   } catch (err) {
-    //     if (!err.response.data.success) {
-    //       setAlert({
-    //         display: true,
-    //         type: 'danger',
-    //         msg: err.response.data.message,
-    //       });
-    //     }
-    //   }
-    // }
   };
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className="row d-flex justify-content-center main-col ">
