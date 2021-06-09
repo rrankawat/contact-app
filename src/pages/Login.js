@@ -1,38 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import validate from '../utils/validate';
-import { loginUser } from '../redux/auth/authActions';
 import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../redux/auth/authActions';
+import { setAlert, resetAlert } from '../redux/alert/alertActions';
 
 import Alert from '../components/Alert';
+import Spinner from '../components/spinner/Spinner';
 
 const Login = () => {
   const dispatch = useDispatch();
 
   const login = useSelector((state) => state.loginUser);
-  const { loading } = login;
+  const { loading, error } = login;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [errors, setErrors] = useState({});
 
-  const [alert, setAlert] = useState({
-    display: false,
-    type: '',
-    msg: '',
-  });
-
   useEffect(() => {
-    return () => {
-      setEmail('');
-      setPassword('');
-      setAlert({
-        display: false,
-        type: '',
-        msg: '',
-      });
-    };
-  }, []);
+    if (error) {
+      dispatch(setAlert(error));
+    } else {
+      dispatch(resetAlert());
+    }
+  }, [dispatch, error]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,13 +40,13 @@ const Login = () => {
   };
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Spinner />;
   }
 
   return (
     <div className="row d-flex justify-content-center main-col ">
       <div className="form col-md-6">
-        {alert.display && <Alert type={alert.type} msg={alert.msg} />}
+        {error && <Alert />}
 
         <div className="form-heading mb-4 text-center">
           <h1>

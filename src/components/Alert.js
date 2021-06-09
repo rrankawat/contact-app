@@ -1,18 +1,27 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { resetAlert } from '../redux/alert/alertActions';
 import PropTypes from 'prop-types';
 
-const Alert = ({ type, msg }) => {
+const Alert = () => {
+  const dispatch = useDispatch();
+
+  const alert = useSelector((state) => state.alerts.alert);
+
   return (
     <div
-      className={`alert alert-dismissible fade show alert-${type}`}
+      className={`alert alert-dismissible fade show alert-${
+        alert.success === true ? 'success' : 'danger'
+      }`}
       role="alert"
     >
-      {msg}
+      {alert.message}
       <button
         type="button"
         className="btn-close"
         data-bs-dismiss="alert"
         aria-label="Close"
+        onClick={() => dispatch(resetAlert())}
       ></button>
     </div>
   );

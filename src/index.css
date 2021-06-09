@@ -30,12 +30,9 @@ body {
 .header .navbar {
   background-color: var(--primary) !important;
 }
-.navbar .container ul li {
+/* .navbar .container ul li {
   margin: auto;
-}
-.navbar .container ul li a {
-  font-size: 18px;
-}
+} */
 
 /* .row {
   height: 90vh;

@@ -1,12 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { AiFillContacts } from 'react-icons/ai';
-import { BiLogOutCircle } from 'react-icons/bi';
 
 const Topbar = () => {
   return (
     <div className="header">
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark ">
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark ">
         <div className="container">
           <Link className="navbar-brand" to="/">
             <AiFillContacts size={25} /> Contact Keeper
@@ -23,20 +22,31 @@ const Topbar = () => {
           <div className="collapse navbar-collapse" id="menu">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <Link className="nav-link text-light " to="/register">
+                <NavLink
+                  className="nav-link"
+                  activeClassName="active"
+                  to="/register"
+                >
                   Register
-                </Link>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link className="nav-link text-light" to="/login">
+                <NavLink
+                  className="nav-link"
+                  activeClassName="active"
+                  to="/login"
+                >
                   Login
-                </Link>
+                </NavLink>
               </li>
-
               <li className="nav-item">
-                <Link className="nav-link text-light" to="#">
-                  <BiLogOutCircle size={25} /> Logout
-                </Link>
+                <NavLink
+                  className="nav-link"
+                  activeClassName="active"
+                  to="/logout"
+                >
+                  Logout
+                </NavLink>
               </li>
             </ul>
           </div>
